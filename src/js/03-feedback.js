@@ -1,12 +1,37 @@
 
-import   throttle  from 'lodash.throttle';
+import   _throttle  from 'lodash.throttle';
 
-const STORAGE_KEY = 'feedback-msg';
+const STORAGE_KEY = 'feedback-form-state';
+const form = document.querySelector('.feedback-form');
+let formData ={};
 
-const refs = {
-  form: document.querySelector('.feedback-form'),
-  textarea: document.querySelector('.feedback-form  textarea'),
-};
+form.addEventListener('submit', FormSubmit);
+form.addEventListener('input', _throttle(onFormInput, 500));
 
-refs.form.addEventListener('submit', onFormSubmit);
-refs.textarea.addEventListener('input', throttle(onTextareaInput, 200));
+formLoad();
+
+function FormSubmit(e) {
+  e.preventDefault();
+  const savedData = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  console.log("Отправили",savedData);
+  
+  e.currentTarget.reset();
+  localStorage.removeItem(STORAGE_KEY);
+  formData = {};
+}
+
+function onFormInput(e) {
+
+  formData[e.target.name]=e.target.value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+
+}
+
+function formLoad() {
+
+  const formLoad = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (!formLoad) { return; }
+  form.email.value = formLoad.email || '';
+  form.message.value = formLoad.message || '';
+}
+
