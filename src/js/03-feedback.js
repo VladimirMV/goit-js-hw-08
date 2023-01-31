@@ -30,8 +30,14 @@ function onFormInput(e) {
 function formLoad() {
 
   const formLoad = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
   if (!formLoad) { return; }
   form.email.value = formLoad.email || '';
   form.message.value = formLoad.message || '';
+  formData.email =form.email.value ;
+  formData.message =form.message.value ;
+   
+
 }
 
+ 
